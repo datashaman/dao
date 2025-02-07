@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
@@ -16,11 +15,11 @@ class EntityAttribute extends Model
 
     public function persons(): MorphToMany
     {
-        return $this->morphedByMany( Person::class, 'entity');
+        return $this->morphedByMany(Person::class, 'entity');
     }
 
     public function items(): MorphToMany
     {
-        return $this->morphedByMany( Item::class, 'entity');
+        return $this->morphedByMany(Item::class, 'entity');
     }
 }

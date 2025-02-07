@@ -17,7 +17,7 @@ class Attribute extends Model
     public function persons(): MorphToMany
     {
         return $this
-            ->morphToMany( Person::class, 'entity');
+            ->morphToMany(Person::class, 'entity');
     }
 
     public function items(): BelongsToMany

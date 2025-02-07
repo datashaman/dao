@@ -15,11 +15,11 @@ class EntityItem extends Model
 
     public function persons(): MorphToMany
     {
-        return $this->morphedByMany( Person::class, 'entity');
+        return $this->morphedByMany(Person::class, 'entity');
     }
 
     public function regions(): MorphToMany
     {
-        return $this->morphedByMany( Region::class, 'entity');
+        return $this->morphedByMany(Region::class, 'entity');
     }
 }
