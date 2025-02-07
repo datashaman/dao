@@ -11,8 +11,8 @@ trim_trailing_whitespace = true
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{yml,yaml}]
-indent_size = 2
+[{Makefile,*.mak}]
+indent_style = tab
 
-[docker-compose.yml]
-indent_size = 4
+[*.{js,json,yml}]
+indent_size = 2
