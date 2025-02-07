@@ -89,6 +89,7 @@ return new class extends Migration
 
         Schema::create('persons', function (Blueprint $table) {
             $table->integer('id')->primary();
+            $table->integer('user_id')->index('user_id');
             $table->string('family_name');
             $table->string('given_name');
             $table->string('honorific')->nullable();
@@ -202,10 +203,11 @@ return new class extends Migration
         });
 
         Schema::table('persons', function (Blueprint $table) {
-            $table->foreign(['birth_region_id'], 'persons_ibfk_1')->references(['id'])->on('regions')->onUpdate('no action')->onDelete('no action');
-            $table->foreign(['current_region_id'], 'persons_ibfk_2')->references(['id'])->on('regions')->onUpdate('no action')->onDelete('no action');
-            $table->foreign(['race_id'], 'persons_ibfk_3')->references(['id'])->on('races')->onUpdate('no action')->onDelete('no action');
-            $table->foreign(['bloodline_id'], 'persons_ibfk_4')->references(['id'])->on('bloodlines')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['user_id'], 'persons_ibfk_1')->references(['id'])->on('users')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['birth_region_id'], 'persons_ibfk_2')->references(['id'])->on('regions')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['current_region_id'], 'persons_ibfk_3')->references(['id'])->on('regions')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['race_id'], 'persons_ibfk_4')->references(['id'])->on('races')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['bloodline_id'], 'persons_ibfk_5')->references(['id'])->on('bloodlines')->onUpdate('no action')->onDelete('no action');
         });
 
         Schema::table('planets', function (Blueprint $table) {
@@ -259,6 +261,7 @@ return new class extends Migration
             $table->dropForeign('persons_ibfk_2');
             $table->dropForeign('persons_ibfk_3');
             $table->dropForeign('persons_ibfk_4');
+            $table->dropForeign('persons_ibfk_5');
         });
 
         Schema::table('person_title', function (Blueprint $table) {

@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Person extends Model
 {
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function homePlanet(): BelongsTo
     {
         return $this->belongsTo(Planet::class);
