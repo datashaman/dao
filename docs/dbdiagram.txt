@@ -1,0 +1,234 @@
+# See https://dbdiagram.io/d/Dao-67a56416263d6cf9a052df60
+Table "universes" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "sectors" {
+  id int [PK]
+  universe_id int [ref: > universes.id]
+  name varchar [not null]
+
+  indexes {
+    (universe_id, name) [unique]
+  }
+}
+
+Table "planets" {
+  id int [PK]
+  sector_id int [ref: > sectors.id]
+  name varchar [not null]
+
+  indexes {
+    (sector_id, name) [unique]
+  }
+}
+
+Table "regions" {
+  id int [PK]
+  planet_id int [not null, ref: > planets.id]
+  name varchar [not null]
+
+  indexes {
+    (planet_id, name) [unique]
+  }
+}
+
+Table "bloodlines" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "races" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "users" {
+  id int [PK]
+}
+
+Table "persons" {
+  id int [PK]
+  user_id int [not null, ref: > users.id]
+  family_name varchar [not null]
+  given_name varchar [not null]
+  honorific varchar
+  date_of_birth date
+  birth_region_id int [not null, ref: > regions.id]
+  current_region_id int [not null, ref: > regions.id]
+  race_id int [not null, ref: > races.id]
+  bloodline_id int [ref: > bloodlines.id]
+
+  indexes {
+    (family_name, given_name) [unique]
+  }
+}
+
+Table "attributes" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "entity_attributes" {
+  id int [PK]
+  entity_type varchar [not null]
+  entity_id int [not null]
+  attribute_id int [not null, ref: > attributes.id]
+  value int [not null]
+  max_value int
+
+  indexes {
+    (entity_type, entity_id, attribute_id) [unique]
+  }
+}
+
+Table "modifiers" {
+  id int [PK]
+  modifier_type varchar [not null]
+  modifier_id int [not null]
+  attribute_id int [not null, ref: > attributes.id]
+  multiplier int
+  difference int
+  base_difference int
+  max_difference int
+
+  indexes {
+    (modifier_type, modifier_id)
+    attribute_id
+  }
+}
+
+Table "title_types" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "titles" {
+  id int [PK]
+  name varchar [not null]
+  title_type_id int [not null, ref: > title_types.id]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "person_title" {
+  id int [PK]
+  person_id int [not null, ref: > persons.id]
+  title_id int [not null, ref: > titles.id]
+
+  indexes {
+    (person_id, title_id) [unique]
+  }
+}
+
+Table "profession_levels" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "professions" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "person_professions" {
+  id int [PK]
+  person_id int [not null, ref: > persons.id]
+  profession_id int [not null, ref: > professions.id]
+  profession_level_id int [not null, ref: > profession_levels.id]
+
+  indexes {
+    (person_id, profession_id) [unique]
+  }
+}
+
+Table "skill_types" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "skills" {
+  id int [PK]
+  name varchar [not null]
+  skill_type_id int [not null, ref: > skill_types.id]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "skill_levels" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "person_skills" {
+  id int [PK]
+  person_id int [not null, ref: > persons.id]
+  skill_id int [not null, ref: > skills.id]
+  skill_level_id int [not null, ref: > skill_levels.id]
+
+  indexes {
+    (person_id, skill_id) [unique]
+  }
+}
+
+Table "items" {
+  id int [PK]
+  name varchar [not null]
+
+  indexes {
+    name [unique]
+  }
+}
+
+Table "entity_items" {
+  id int [PK]
+  entity_type varchar [not null]
+  entity_id int [not null]
+  item_id int [not null, ref: > items.id]
+  quantity int [not null]
+
+  indexes {
+    (entity_type, entity_id, item_id) [unique]
+  }
+}
