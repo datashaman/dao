@@ -19,7 +19,7 @@ class Planet extends Model
         return $this->hasMany(Region::class);
     }
 
-    public function nativePersons(): HasMany
+    public function nativePeople(): HasMany
     {
         return $this->hasMany(Person::class, 'home_planet_id');
     }

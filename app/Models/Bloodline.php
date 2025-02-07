@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Bloodline extends Model
 {
-    public function persons(): HasMany
+    public function people(): HasMany
     {
         return $this->hasMany(Person::class);
     }

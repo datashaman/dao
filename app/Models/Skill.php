@@ -19,7 +19,7 @@ class Skill extends Model
         return $this->hasMany(PersonSkill::class);
     }
 
-    public function persons(): HasManyThrough
+    public function people(): HasManyThrough
     {
         return $this->hasManyThrough(Person::class, SkillLevel::class);
     }

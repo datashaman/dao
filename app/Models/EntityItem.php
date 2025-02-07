@@ -13,7 +13,7 @@ class EntityItem extends Model
         return $this->morphTo();
     }
 
-    public function persons(): MorphToMany
+    public function people(): MorphToMany
     {
         return $this->morphedByMany(Person::class, 'entity');
     }

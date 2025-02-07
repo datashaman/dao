@@ -67,6 +67,22 @@ return new class extends Migration
             $table->index(['modifier_type', 'modifier_id'], 'modifiers_index_9');
         });
 
+        Schema::create('people', function (Blueprint $table) {
+            $table->integer('id', true);
+            $table->unsignedBigInteger('user_id')->index('user_id');
+            $table->string('family_name');
+            $table->string('given_name');
+            $table->string('honorific')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->integer('birth_region_id')->index('birth_region_id');
+            $table->integer('current_region_id')->index('current_region_id');
+            $table->integer('race_id')->index('race_id');
+            $table->integer('bloodline_id')->nullable()->index('bloodline_id');
+            $table->timestamps();
+
+            $table->unique(['family_name', 'given_name'], 'people_index_6');
+        });
+
         Schema::create('person_professions', function (Blueprint $table) {
             $table->integer('id', true);
             $table->integer('person_id');
@@ -94,22 +110,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['person_id', 'title_id'], 'person_title_index_13');
-        });
-
-        Schema::create('persons', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->unsignedBigInteger('user_id')->index('user_id');
-            $table->string('family_name');
-            $table->string('given_name');
-            $table->string('honorific')->nullable();
-            $table->date('date_of_birth')->nullable();
-            $table->integer('birth_region_id')->index('birth_region_id');
-            $table->integer('current_region_id')->index('current_region_id');
-            $table->integer('race_id')->index('race_id');
-            $table->integer('bloodline_id')->nullable()->index('bloodline_id');
-            $table->timestamps();
-
-            $table->unique(['family_name', 'given_name'], 'persons_index_6');
         });
 
         Schema::create('planets', function (Blueprint $table) {
@@ -207,29 +207,29 @@ return new class extends Migration
             $table->foreign(['attribute_id'], 'modifiers_ibfk_1')->references(['id'])->on('attributes')->onUpdate('no action')->onDelete('no action');
         });
 
+        Schema::table('people', function (Blueprint $table) {
+            $table->foreign(['user_id'], 'people_ibfk_1')->references(['id'])->on('users')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['birth_region_id'], 'people_ibfk_2')->references(['id'])->on('regions')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['current_region_id'], 'people_ibfk_3')->references(['id'])->on('regions')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['race_id'], 'people_ibfk_4')->references(['id'])->on('races')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['bloodline_id'], 'people_ibfk_5')->references(['id'])->on('bloodlines')->onUpdate('no action')->onDelete('no action');
+        });
+
         Schema::table('person_professions', function (Blueprint $table) {
-            $table->foreign(['person_id'], 'person_professions_ibfk_1')->references(['id'])->on('persons')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['person_id'], 'person_professions_ibfk_1')->references(['id'])->on('people')->onUpdate('no action')->onDelete('no action');
             $table->foreign(['profession_id'], 'person_professions_ibfk_2')->references(['id'])->on('professions')->onUpdate('no action')->onDelete('no action');
             $table->foreign(['profession_level_id'], 'person_professions_ibfk_3')->references(['id'])->on('profession_levels')->onUpdate('no action')->onDelete('no action');
         });
 
         Schema::table('person_skills', function (Blueprint $table) {
-            $table->foreign(['person_id'], 'person_skills_ibfk_1')->references(['id'])->on('persons')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['person_id'], 'person_skills_ibfk_1')->references(['id'])->on('people')->onUpdate('no action')->onDelete('no action');
             $table->foreign(['skill_id'], 'person_skills_ibfk_2')->references(['id'])->on('skills')->onUpdate('no action')->onDelete('no action');
             $table->foreign(['skill_level_id'], 'person_skills_ibfk_3')->references(['id'])->on('skill_levels')->onUpdate('no action')->onDelete('no action');
         });
 
         Schema::table('person_title', function (Blueprint $table) {
-            $table->foreign(['person_id'], 'person_title_ibfk_1')->references(['id'])->on('persons')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['person_id'], 'person_title_ibfk_1')->references(['id'])->on('people')->onUpdate('no action')->onDelete('no action');
             $table->foreign(['title_id'], 'person_title_ibfk_2')->references(['id'])->on('titles')->onUpdate('no action')->onDelete('no action');
-        });
-
-        Schema::table('persons', function (Blueprint $table) {
-            $table->foreign(['user_id'], 'persons_ibfk_1')->references(['id'])->on('users')->onUpdate('no action')->onDelete('no action');
-            $table->foreign(['birth_region_id'], 'persons_ibfk_2')->references(['id'])->on('regions')->onUpdate('no action')->onDelete('no action');
-            $table->foreign(['current_region_id'], 'persons_ibfk_3')->references(['id'])->on('regions')->onUpdate('no action')->onDelete('no action');
-            $table->foreign(['race_id'], 'persons_ibfk_4')->references(['id'])->on('races')->onUpdate('no action')->onDelete('no action');
-            $table->foreign(['bloodline_id'], 'persons_ibfk_5')->references(['id'])->on('bloodlines')->onUpdate('no action')->onDelete('no action');
         });
 
         Schema::table('planets', function (Blueprint $table) {
@@ -278,14 +278,6 @@ return new class extends Migration
             $table->dropForeign('planets_ibfk_1');
         });
 
-        Schema::table('persons', function (Blueprint $table) {
-            $table->dropForeign('persons_ibfk_1');
-            $table->dropForeign('persons_ibfk_2');
-            $table->dropForeign('persons_ibfk_3');
-            $table->dropForeign('persons_ibfk_4');
-            $table->dropForeign('persons_ibfk_5');
-        });
-
         Schema::table('person_title', function (Blueprint $table) {
             $table->dropForeign('person_title_ibfk_1');
             $table->dropForeign('person_title_ibfk_2');
@@ -301,6 +293,14 @@ return new class extends Migration
             $table->dropForeign('person_professions_ibfk_1');
             $table->dropForeign('person_professions_ibfk_2');
             $table->dropForeign('person_professions_ibfk_3');
+        });
+
+        Schema::table('people', function (Blueprint $table) {
+            $table->dropForeign('people_ibfk_1');
+            $table->dropForeign('people_ibfk_2');
+            $table->dropForeign('people_ibfk_3');
+            $table->dropForeign('people_ibfk_4');
+            $table->dropForeign('people_ibfk_5');
         });
 
         Schema::table('modifiers', function (Blueprint $table) {
@@ -339,13 +339,13 @@ return new class extends Migration
 
         Schema::dropIfExists('planets');
 
-        Schema::dropIfExists('persons');
-
         Schema::dropIfExists('person_title');
 
         Schema::dropIfExists('person_skills');
 
         Schema::dropIfExists('person_professions');
+
+        Schema::dropIfExists('people');
 
         Schema::dropIfExists('modifiers');
 

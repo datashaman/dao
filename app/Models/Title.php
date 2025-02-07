@@ -14,7 +14,7 @@ class Title extends Model
         return $this->belongsTo(TitleType::class);
     }
 
-    public function persons(): BelongsToMany
+    public function people(): BelongsToMany
     {
         return $this->belongsToMany(Person::class);
     }

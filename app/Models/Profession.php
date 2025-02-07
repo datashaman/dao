@@ -19,7 +19,7 @@ class Profession extends Model
         return $this->hasMany(PersonProfession::class);
     }
 
-    public function persons(): HasManyThrough
+    public function people(): HasManyThrough
     {
         return $this->hasManyThrough(Person::class, PersonProfession::class);
     }

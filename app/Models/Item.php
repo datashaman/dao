@@ -14,7 +14,7 @@ class Item extends Model
         return $this->morphMany(Modifier::class, 'entity');
     }
 
-    public function persons(): MorphToMany
+    public function people(): MorphToMany
     {
         return $this->morphToMany(Person::class, 'entity');
     }
