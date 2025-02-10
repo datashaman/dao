@@ -2,81 +2,69 @@
 
 namespace Database\Seeders;
 
-use App\Models\Race;
-use App\Models\TitleType;
-use App\Models\Universe;
+use App\Models\Character;
+use App\Models\ItemType;
 use App\Models\User;
-use App\Support\NameGenerator;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(NameGenerator $nameGenerator): void
+    public function run(): void
     {
-        // User::factory(10)->create();
+        $weapon = ItemType::query()->create([
+            'id' => 'weapon',
+            'name' => 'Weapon',
+        ]);
+
+        $shield = ItemType::query()->create([
+            'id' => 'shield',
+            'name' => 'Shield',
+        ]);
+
+        $shortSword = $weapon->items()->create([
+            'name' => 'Short Sword',
+            'dice_count' => 1,
+            'dice_size' => 4,
+            'base_modifier' => 1,
+        ]);
+
+        $buckler = $shield->items()->create([
+            'name' => 'Buckler',
+            'defence' => 2,
+        ]);
 
         $user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
-        $universe = Universe::create([
-            'name' => 'Test Universe',
+        $character = $user->characters()->create([
+            'name' => 'Errant Monk',
+            'strength' => 10,
+            'constitution' => 10,
+            'dexterity' => 10,
         ]);
 
-        $maxSectors = rand(1, 5);
-
-        for ($x = 1; $x <= $maxSectors; $x++) {
-            $sector = $universe->sectors()->create([
-                'name' => "Sector $x",
-            ]);
-
-            $maxPlanets = rand(1, 7);
-
-            for ($y = 0; $y < $maxPlanets; $y++) {
-                $planet = $sector->planets()->create([
-                    "name" => $nameGenerator->generate(false),
-                ]);
-
-                $maxRegions = rand(1, 7);
-
-                for ($z = 0; $z < $maxRegions; $z++) {
-                    $region = $planet->regions()->create([
-                        "name" => $nameGenerator->generate(),
-                    ]);
-                }
-            }
-        }
-
-        $limited = TitleType::create([
-            'name' => 'Limited',
+        $character->characterItems()->create([
+            'item_id' => $shortSword->id,
+            'equipped' => true,
         ]);
 
-        $progenitor = $limited->titles()->create([
-            'name' => 'Progenitor',
+        $character->characterItems()->create([
+            'item_id' => $buckler->id,
+            'equipped' => true,
         ]);
 
-        $unique = TitleType::create([
-            'name' => 'Unique',
+        $enemy = Character::query()->create([
+            'name' => 'Gibbering Wreck',
+            'strength' => 10,
+            'constitution' => 10,
+            'dexterity' => 10,
         ]);
 
-        $human = Race::create([
-            'name' => 'Human',
+        $enemy->characterItems()->create([
+            'item_id' => $buckler->id,
+            'equipped' => true,
         ]);
-
-        $person = $user->people()->create([
-            'family_name' => 'Zachary',
-            'given_name' => 'Atwood',
-            'honorific' => 'Lord',
-            'birth_region_id' => $region->id,
-            'current_region_id' => $region->id,
-            'race_id' => $human->id,
-        ]);
-
-        $person->titles()->save($progenitor);
     }
 }
-
