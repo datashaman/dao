@@ -10,8 +10,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -34,9 +34,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function people(): HasMany
+    public function characters(): HasMany
     {
-        return $this->hasMany(Person::class);
+        return $this->hasMany(Character::class);
+    }
+
+    public function contests(): HasMany
+    {
+        return $this->hasMany(Contest::class);
     }
 
     /**
