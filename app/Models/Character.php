@@ -68,7 +68,21 @@ class Character extends Model
     public function damage(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attr) => $this->weapons->sum('damage')
+            get: fn (mixed $value, array $attr) => $this->weapons->pluck('item')->sum('damage')
+        );
+    }
+
+    public function minDamage(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attr) => $this->weapons->pluck('item')->sum('minDamage')
+        );
+    }
+
+    public function maxDamage(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attr) => $this->weapons->pluck('item')->sum('maxDamage')
         );
     }
 }

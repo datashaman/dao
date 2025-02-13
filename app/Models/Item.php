@@ -55,7 +55,7 @@ class Item extends Model
         );
     }
 
-    public function calculateDamage(string $type = 'rand'): Attribute
+    public function calculateDamage(string $type = 'rand'): int
     {
         return $this->rollDice($type)
             + ($this->base_modifier ?? 0)

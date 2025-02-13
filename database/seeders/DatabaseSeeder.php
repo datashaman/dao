@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Character;
+use App\Models\Contest;
 use App\Models\ItemType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -65,6 +66,12 @@ class DatabaseSeeder extends Seeder
         $enemy->characterItems()->create([
             'item_id' => $buckler->id,
             'equipped' => true,
+        ]);
+
+        $contest = $user->contests()->create([
+            'name' => 'Test Contest',
+            'min_contestants' => 1,
+            'max_contestants' => 1,
         ]);
     }
 }

@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('status')->default('pending');
             $table->unsignedTinyInteger('min_contestants');
             $table->unsignedTinyInteger('max_contestants');
-            $table->unsignedTinyInteger('timeout_minutes');
-            $table->unsignedTinyInteger('countdown_seconds');
+            $table->unsignedTinyInteger('countdown_seconds')->default(5);
+            $table->unsignedTinyInteger('timeout_minutes')->nullable();
             $table->string('winner')->nullable();
             $table->timestamp('started_at')->nullable();
             $table->timestamp('finished_at')->nullable();
