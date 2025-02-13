@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps({
     character: Object,
-})
+});
 </script>
 
 <template>
@@ -9,27 +9,27 @@ defineProps({
         {{ character.name }}
 
         <div class="flex flex-col">
-            <div class="flex flex-row gap-2 justify-between">
+            <div class="flex flex-row justify-between gap-2">
                 <div>Strength</div>
                 <div>{{ character.strength }}</div>
             </div>
-            <div class="flex flex-row gap-2 justify-between">
+            <div class="flex flex-row justify-between gap-2">
                 <div>Constitution</div>
                 <div>{{ character.constitution }}</div>
             </div>
-            <div class="flex flex-row gap-2 justify-between">
+            <div class="flex flex-row justify-between gap-2">
                 <div>Dexterity</div>
                 <div>{{ character.dexterity }}</div>
             </div>
-            <div class="flex flex-row gap-2 justify-between">
+            <div class="flex flex-row justify-between gap-2">
                 <div>Damage</div>
                 <div>{{ character.damage }}</div>
             </div>
-            <div class="flex flex-row gap-2 justify-between">
+            <div class="flex flex-row justify-between gap-2">
                 <div>Defence</div>
                 <div>{{ character.defence }}</div>
             </div>
-            <div class="flex flex-row gap-2 justify-between">
+            <div class="flex flex-row justify-between gap-2">
                 <div>Health</div>
                 <div>{{ character.health }}</div>
             </div>
@@ -37,6 +37,4 @@ defineProps({
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps({
     contest: Object,
-})
+});
 </script>
 
 <template>
@@ -10,6 +10,4 @@ defineProps({
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
