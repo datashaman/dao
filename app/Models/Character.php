@@ -6,83 +6,71 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use MongoDB\Laravel\Eloquent\Model;
 
 class Character extends Model
 {
     use HasFactory;
     use HasUlids;
 
+    protected $appends = [
+        'health',
+        'min_damage',
+        'max_damage',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function characterItems(): HasMany
-    {
-        return $this->hasMany(CharacterItem::class);
-    }
-
-    public function items(): HasManyThrough
-    {
-        return $this->hasManyThrough(Item::class, CharacterItem::class);
-    }
-
-    public function contestants(): HasMany
-    {
-        return $this->hasMany(Contestant::class);
-    }
-
-    public function contests(): HasManyThrough
-    {
-        return $this->hasManyThrough(Contest::class, Contestant::class);
-    }
-
     public function weapons(): Attribute
     {
         return Attribute::make(
-            get: fn (): Collection => $this->characterItems()
-                ->with(['item', 'item.itemType'])
-                ->join('items', 'items.id', '=', 'character_items.item_id')
-                ->where('character_items.equipped', true)
-                ->where('items.item_type_id', 'weapon')
-                ->get(['character_items.*'])
+            get: fn () => collect($this->equipment)
+                ->map(fn($equipment) => Item::find($equipment['item_id']))
+                ->filter(
+                    fn($item) => $item->item_type === 'weapon'
+                )
         );
     }
 
     public function shield(): Attribute
     {
         return Attribute::make(
-            get: fn (): ?CharacterItem => $this->characterItems()
-                ->with(['item', 'item.itemType'])
-                ->join('items', 'items.id', '=', 'character_items.item_id')
-                ->where('character_items.equipped', true)
-                ->where('items.item_type_id', 'shield')
-                ->first(['character_items.*'])
+            get: fn () => collect($this->equipment)
+                ->map(fn($equipment) => Item::find($equipment['item_id']))
+                ->filter(
+                    fn($item) => $item->item_type === 'armour'
+                )
         );
     }
 
     public function damage(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attr) => $this->weapons->pluck('item')->sum('damage')
+            get: fn (mixed $value, array $attr) => $this
+                ->weapons
+                ->sum('damage')
         );
     }
 
     public function minDamage(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attr) => $this->weapons->pluck('item')->sum('minDamage')
+            get: fn (mixed $value, array $attr) => $this
+                ->weapons
+                ->sum('min_damage')
         );
     }
 
     public function maxDamage(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attr) => $this->weapons->pluck('item')->sum('maxDamage')
+            get: fn (mixed $value, array $attr) => $this
+                ->weapons
+                ->sum('max_damage')
         );
     }
 }

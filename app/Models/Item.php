@@ -5,10 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use MongoDB\Laravel\Eloquent\Model;
 
 class Item extends Model
 {
@@ -18,21 +15,6 @@ class Item extends Model
     protected $casts = [
         'quantifiable' => 'boolean',
     ];
-
-    public function itemType(): BelongsTo
-    {
-        return $this->belongsTo(ItemType::class);
-    }
-
-    public function characterItems(): HasMany
-    {
-        return $this->hasMany(CharacterItem::class);
-    }
-
-    public function characters(): HasManyThrough
-    {
-        return $this->hasManyThrough(Character::class, CharacterItem::class);
-    }
 
     public function minDamage(): Attribute
     {
