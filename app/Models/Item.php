@@ -49,7 +49,7 @@ class Item extends Model
     ): int {
         $roll = 0;
 
-        for($i = 0; $i < $this->dice_count; $i++) {
+        for ($i = 0; $i < $this->dice_count; $i++) {
             $roll += (int) match ($type) {
                 'min' => 1,
                 'max' => $this->dice_size,

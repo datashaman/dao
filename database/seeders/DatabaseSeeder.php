@@ -6,7 +6,6 @@ use App\Models\Character;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use MongoDB\BSON\ObjectID;
 
 class DatabaseSeeder extends Seeder
 {
@@ -40,9 +39,12 @@ class DatabaseSeeder extends Seeder
 
         $playerCharacter = $user->characters()->create([
             'name' => 'Errant Monk',
-            'strength' => 10,
-            'constitution' => 10,
-            'dexterity' => 10,
+
+            'attributes' => [
+                'strength' => 2,
+                'constitution' => 2,
+                'dexterity' => 2,
+            ],
 
             'equipment' => [
                 [
@@ -56,18 +58,25 @@ class DatabaseSeeder extends Seeder
             ],
 
             'inventory' => [
-                [
-                    'item_id' => $healingPotion->id,
-                    'quantity' => 3,
+                'items' => [
+                    [
+                        'position' => [0, 0],
+                        'quantity' => 3,
+                        'item_id' => $healingPotion->id,
+                    ],
                 ],
+                'size' => [4, 4],
             ],
         ]);
 
         $enemyCharacter = Character::query()->create([
             'name' => 'Gibbering Wreck',
-            'strength' => 10,
-            'constitution' => 10,
-            'dexterity' => 10,
+
+            'attributes' => [
+                'strength' => 2,
+                'constitution' => 2,
+                'dexterity' => 2,
+            ],
 
             'equipment' => [
                 [
@@ -84,11 +93,11 @@ class DatabaseSeeder extends Seeder
 
             'contestants' => [
                 [
-                    'contestant_id' => $playerCharacter->id,
+                    'character_id' => $playerCharacter->id,
                     'status' => 'ready',
                 ],
                 [
-                    'contestant_id' => $enemyCharacter->id,
+                    'character_id' => $enemyCharacter->id,
                     'status' => 'ready',
                 ],
             ],
