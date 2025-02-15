@@ -2,27 +2,60 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use MongoDB\Laravel\Eloquent\Model;
 
 class Item extends Model
 {
-    public function modifiers(): MorphMany
+    use HasFactory;
+
+    protected $casts = [
+        'quantifiable' => 'boolean',
+    ];
+
+    public function minDamage(): Attribute
     {
-        return $this->morphMany(Modifier::class, 'entity');
+        return Attribute::make(
+            get: fn ($value, $attr) => $this->calculateDamage('min')
+        );
     }
 
-    public function people(): MorphToMany
+    public function maxDamage(): Attribute
     {
-        return $this->morphToMany(Person::class, 'entity');
+        return Attribute::make(
+            get: fn ($value, $attr) => $this->calculateDamage('max')
+        );
     }
 
-    public function attributes(): BelongsToMany
+    public function damage(): Attribute
     {
-        return $this
-            ->belongsToMany(Attribute::class)
-            ->withPivot(['value', 'max_value']);
+        return Attribute::make(
+            get: fn ($value, $attr) => $this->calculateDamage()
+        );
+    }
+
+    public function calculateDamage(string $type = 'rand'): int
+    {
+        return $this->rollDice($type)
+            + ($this->base_modifier ?? 0)
+            + ($this->modifier ?? 0);
+    }
+
+    protected function rollDice(
+        string $type = 'rand'
+    ): int {
+        $roll = 0;
+
+        for ($i = 0; $i < $this->dice_count; $i++) {
+            $roll += (int) match ($type) {
+                'min' => 1,
+                'max' => $this->dice_size,
+                'avg' => (1 + $this->dice_size) / 2,
+                'rand' => rand(1, $this->dice_size),
+            };
+        }
+
+        return $roll;
     }
 }

@@ -72,6 +72,13 @@ return [
             'after_commit' => false,
         ],
 
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'connection' => 'mongodb',
+            'table' => 'jobs',
+            'queue' => 'default',
+            // 'retry_after' => 60,
+        ],
     ],
 
     /*
@@ -104,9 +111,8 @@ return [
     */
 
     'failed' => [
-        'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-        'database' => env('DB_CONNECTION', 'sqlite'),
+        'driver' => 'mongodb',
+        'database' => 'mongodb',
         'table' => 'failed_jobs',
     ],
-
 ];
